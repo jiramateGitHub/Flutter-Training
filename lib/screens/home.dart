@@ -1,3 +1,4 @@
+import 'package:appshoppingmall/register.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -51,7 +52,12 @@ class _HomeState extends State<Home> {
           color: Colors.red[900],
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(
+          builder: (BuildContext context) => Register(),
+        );
+        Navigator.of(context).push(materialPageRoute);
+      },
     );
   }
 
