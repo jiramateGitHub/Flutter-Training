@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
       style: TextStyle(
           fontSize: 30.0,
           color: Colors.red[900],
-          //fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.bold,
           // fontStyle: FontStyle.italic,
           fontFamily: 'Indie Flower'),
     );
