@@ -7,6 +7,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   // Explicit
+  final formKey = GlobalKey<FormState>();
 
   // Method
   Widget registerButton() {
@@ -14,6 +15,9 @@ class _RegisterState extends State<Register> {
       icon: Icon(Icons.done),
       onPressed: () {
         print("click register");
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
+        }
       },
     );
   }
@@ -30,6 +34,13 @@ class _RegisterState extends State<Register> {
             fontWeight: FontWeight.bold,
           ),
           helperText: 'Type Your Name for Display'),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Please Fill Your Name in the Blank';
+        } else {
+          return null;
+        }
+      },
     );
   }
 
@@ -46,6 +57,13 @@ class _RegisterState extends State<Register> {
             fontWeight: FontWeight.bold,
           ),
           helperText: 'Type Your Email'),
+      validator: (String value) {
+        if (!( (value.contains('@')) && (value.contains('.')) )) {
+          return 'Please Type Email in Exp. you@email.com';
+        } else {
+          return null;
+        }
+      },
     );
   }
 
@@ -62,6 +80,13 @@ class _RegisterState extends State<Register> {
             fontWeight: FontWeight.bold,
           ),
           helperText: 'Type Your Password more 6 Charactor'),
+      validator: (String value) {
+        if (value.length <= 6) {
+          return 'Password More 6 Charactor';
+        } else {
+          return null;
+        }
+      },
     );
   }
 
@@ -72,13 +97,16 @@ class _RegisterState extends State<Register> {
         title: Text('Register'),
         actions: <Widget>[registerButton()],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(30.0),
-        children: <Widget>[
-          nameText(),
-          emailText(),
-          passwordText(),
-        ],
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: EdgeInsets.all(30.0),
+          children: <Widget>[
+            nameText(),
+            emailText(),
+            passwordText(),
+          ],
+        ),
       ),
     );
   }
