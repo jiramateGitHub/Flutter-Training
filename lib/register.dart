@@ -8,6 +8,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   // Explicit
   final formKey = GlobalKey<FormState>();
+  String nameString, emailString, passwordString;
 
   // Method
   Widget registerButton() {
@@ -17,6 +18,7 @@ class _RegisterState extends State<Register> {
         print("click register");
         if (formKey.currentState.validate()) {
           formKey.currentState.save();
+          print('name $nameString');
         }
       },
     );
@@ -41,6 +43,9 @@ class _RegisterState extends State<Register> {
           return null;
         }
       },
+      onSaved: (String value) {
+        nameString = value.trim();
+      },
     );
   }
 
@@ -58,11 +63,14 @@ class _RegisterState extends State<Register> {
           ),
           helperText: 'Type Your Email'),
       validator: (String value) {
-        if (!( (value.contains('@')) && (value.contains('.')) )) {
+        if (!((value.contains('@')) && (value.contains('.')))) {
           return 'Please Type Email in Exp. you@email.com';
         } else {
           return null;
         }
+      },
+      onSaved: (String value) {
+        emailString = value.trim();
       },
     );
   }
@@ -86,6 +94,9 @@ class _RegisterState extends State<Register> {
         } else {
           return null;
         }
+      },
+      onSaved: (String value) {
+        passwordString= value.trim();
       },
     );
   }
