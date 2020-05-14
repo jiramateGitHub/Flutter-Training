@@ -10,7 +10,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  
+
   // Explicit
   final formKey = GlobalKey<FormState>();
   String nameString, emailString, passwordString;
@@ -39,7 +39,7 @@ class _RegisterState extends State<Register> {
         .createUserWithEmailAndPassword(
             email: emailString, password: passwordString)
         .then((response) {
-      print('Register Success for Email = $emailString');
+      print('Register Success for Email = $emailString, Name = $nameString');
       setupDisplayName();
     }).catchError((response) {
       String title = response.code;
