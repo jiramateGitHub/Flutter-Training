@@ -1,3 +1,4 @@
+import 'package:appshoppingmall/screens/authen.dart';
 import 'package:appshoppingmall/screens/my_service.dart';
 import 'package:appshoppingmall/screens/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,7 +60,12 @@ class _HomeState extends State<Home> {
           color: Colors.white,
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(
+          builder: (BuildContext context) => Authen(),
+        );
+        Navigator.of(context).push(materialPageRoute);
+      },
     );
   }
 
