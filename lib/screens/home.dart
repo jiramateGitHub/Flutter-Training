@@ -1,4 +1,6 @@
-import 'package:appshoppingmall/register.dart';
+import 'package:appshoppingmall/screens/my_service.dart';
+import 'package:appshoppingmall/screens/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -10,6 +12,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //Method
+
+  @override
+  void initState() {
+    super.initState();
+    checkStatus();
+  }
+
+  Future<void> checkStatus() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    if (firebaseUser != null) {
+      MaterialPageRoute materialPageRoute =
+          MaterialPageRoute(builder: (BuildContext context) => MyService());
+      Navigator.of(context).pushAndRemoveUntil(
+          materialPageRoute, (Route<dynamic> route) => false);
+    }
+  }
 
   Widget showLogo() {
     return Container(

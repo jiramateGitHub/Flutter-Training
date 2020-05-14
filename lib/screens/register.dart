@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:appshoppingmall/screens/my_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -36,11 +39,56 @@ class _RegisterState extends State<Register> {
             email: emailString, password: passwordString)
         .then((response) {
       print('Register Success for Email = $emailString');
+      setupDisplayName();
     }).catchError((response) {
       String title = response.code;
       String message = response.message;
       print('title = $title, message = $message');
+      MyAlert(title, message);
     });
+  }
+
+  Future<void> setupDisplayName() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth.currentUser().then((response) {
+      UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = nameString;
+      response.updateProfile(userUpdateInfo);
+
+      MaterialPageRoute materialPageRoute =
+          MaterialPageRoute(builder: (BuildContext context) => MyService());
+      Navigator.of(context).pushAndRemoveUntil(
+          materialPageRoute, (Route<dynamic> route) => false);
+    });
+  }
+
+  void MyAlert(String title, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: ListTile(
+              leading: Icon(
+                Icons.add_alert,
+                color: Colors.red,
+                size: 48.0,
+              ),
+              title: Text(
+                title,
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   Widget nameText() {
