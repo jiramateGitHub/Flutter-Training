@@ -1,4 +1,6 @@
+import 'package:appshoppingmall/screens/my_service.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Authen extends StatefulWidget {
   Authen({Key key}) : super(key: key);
@@ -9,6 +11,8 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
   // Explicit
+  final formKey = GlobalKey<FormState>();
+  String emailString, passwordString;
 
   // Method
   Widget backButton() {
@@ -26,9 +30,12 @@ class _AuthenState extends State<Authen> {
 
   Widget content() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[showAppName(), emailText(), passwordText()],
+      child: Form(
+        key: formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[showAppName(), emailText(), passwordText()],
+        ),
       ),
     );
   }
@@ -66,13 +73,24 @@ class _AuthenState extends State<Authen> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-            icon: Icon(
-              Icons.email,
-              size: 36.0,
-              color: Colors.red[700],
-            ),
-            labelText: 'Email :',
-            labelStyle: TextStyle(color: Colors.red[700])),
+          icon: Icon(
+            Icons.email,
+            size: 36.0,
+            color: Colors.red[700],
+          ),
+          labelText: 'Email :',
+          labelStyle: TextStyle(color: Colors.red[700]),
+        ),
+        onSaved: (String value) {
+          emailString = value.trim();
+        },
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Please Fill Your Email in the Blank';
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }
@@ -83,15 +101,75 @@ class _AuthenState extends State<Authen> {
       child: TextFormField(
         obscureText: true,
         decoration: InputDecoration(
-            icon: Icon(
-              Icons.lock,
-              size: 36.0,
-              color: Colors.red[700],
-            ),
-            labelText: 'Password :',
-            labelStyle: TextStyle(color: Colors.red[700])),
+          icon: Icon(
+            Icons.lock,
+            size: 36.0,
+            color: Colors.red[700],
+          ),
+          labelText: 'Password :',
+          labelStyle: TextStyle(color: Colors.red[700]),
+        ),
+        onSaved: (String value) {
+          passwordString = value.trim();
+        },
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Please Fill Your Password in the Blank';
+          } else {
+            return null;
+          }
+        },
       ),
     );
+  }
+
+  Future<void> checkAuthen() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    await firebaseAuth
+        .signInWithEmailAndPassword(
+            email: emailString, password: passwordString)
+        .then((response) {
+      print('Authen Success');
+      MaterialPageRoute materialPageRoute = MaterialPageRoute(
+        builder: (BuildContext context) => MyService(),
+      );
+      Navigator.of(context).pushAndRemoveUntil(
+          materialPageRoute, (Route<dynamic> route) => false);
+    }).catchError((response){
+      String title = response.code;
+      String message = response.message;
+      print('title = $title, message = $message');
+      MyAlert(title,message);
+    });
+  }
+
+   void MyAlert(String title, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: ListTile(
+              leading: Icon(
+                Icons.add_alert,
+                color: Colors.red,
+                size: 48.0,
+              ),
+              title: Text(
+                title,
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
@@ -110,7 +188,12 @@ class _AuthenState extends State<Authen> {
           child: Icon(
             Icons.navigate_next,
           ),
-          onPressed: () {}),
+          onPressed: () {
+            formKey.currentState.save();
+            formKey.currentState.validate();
+            print('email : $emailString, password : $passwordString');
+            checkAuthen();
+          }),
     );
   }
 }

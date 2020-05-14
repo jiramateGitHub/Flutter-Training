@@ -10,6 +10,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  
   // Explicit
   final formKey = GlobalKey<FormState>();
   String nameString, emailString, passwordString;
