@@ -1,4 +1,6 @@
 import 'package:appshoppingmall/screens/home.dart';
+import 'package:appshoppingmall/widget/add_list_product.dart';
+import 'package:appshoppingmall/widget/show_list_product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,7 @@ class MyService extends StatefulWidget {
 class _MyServiceState extends State<MyService> {
   //Explicit
   String login = '...';
+  Widget currentWidget = ShowListProduct();
 
   //Method
   @override
@@ -24,6 +27,9 @@ class _MyServiceState extends State<MyService> {
       title: Text('List Product'),
       subtitle: Text('Show all list product'),
       onTap: () {
+        setState(() {
+          currentWidget = ShowListProduct();
+        });
         Navigator.of(context).pop();
       },
     );
@@ -34,6 +40,9 @@ class _MyServiceState extends State<MyService> {
       leading: Icon(Icons.playlist_add,size: 36.0,),
       title: Text('Add Product'),
       onTap: () {
+        setState(() {
+          currentWidget = AddListProduct();
+        });
         Navigator.of(context).pop();
       },
     );
@@ -162,7 +171,7 @@ class _MyServiceState extends State<MyService> {
         title: Text('My Service'),
         actions: <Widget>[signOutButton()],
       ),
-      body: Text('body'),
+      body: currentWidget,
       drawer: showDrawer(),
     );
   }
